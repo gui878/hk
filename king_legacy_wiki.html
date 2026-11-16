@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>King Legacy — Ultimate Wiki</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Russo+One&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+ --bg:#05070c;--panel:#0b111d;--panel2:#111b2c;--line:#20324e;
+ --gold:#ffd447;--cyan:#45d9ff;--red:#ff4664;--text:#f3f7ff;--muted:#91a0b8;
+}
+body{
+ font-family:Rajdhani,Arial,sans-serif;color:var(--text);background:var(--bg);
+ overflow-x:hidden;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
+ background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+ background-size:40px 40px;z-index:-1;
+}
+a{text-decoration:none;color:inherit}
+button,input{font:inherit}
+
+/* ambient glow */
+.orb{position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.13;pointer-events:none}
+.o1{background:#176bff;top:-180px;left:-150px}.o2{background:#e50045;right:-180px;top:35%;}.o3{background:#00d9ff;bottom:-250px;left:35%}
+
+/* NAV */
+.top{
+ position:fixed;top:0;left:0;right:0;height:76px;z-index:50;
+ background:rgba(3,6,11,.78);backdrop-filter:blur(18px);
+ border-bottom:1px solid rgba(69,217,255,.12);
+ display:flex;align-items:center;padding:0 28px;gap:24px
+}
+.brand{font-family:"Russo One";font-size:22px;letter-spacing:1px;white-space:nowrap}
+.brand b{color:var(--gold)}.brand span{color:#fff}
+.search{max-width:520px;flex:1;margin:auto}
+.search input{
+ width:100%;background:#0b1220;border:1px solid #223652;color:#fff;
+ border-radius:999px;padding:12px 18px;outline:none;transition:.25s
+}
+.search input:focus{border-color:var(--cyan);box-shadow:0 0 25px #45d9ff22}
+.top-right{display:flex;gap:9px}
+.iconbtn,.menu{
+ border:1px solid #223652;background:#0c1422;color:#fff;width:40px;height:40px;
+ border-radius:10px;cursor:pointer
+}
+.menu{display:none}
+
+/* SIDEBAR */
+.sidebar{
+ position:fixed;left:0;top:76px;bottom:0;width:260px;z-index:40;
+ background:rgba(6,10,17,.93);border-right:1px solid #172942;
+ padding:22px 14px;overflow:auto
+}
+.side-title{font-size:11px;color:#60728e;letter-spacing:2px;font-weight:700;margin:18px 12px 8px}
+.navitem{
+ width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;margin:3px 0;
+ color:#aab8ce;background:transparent;border:0;border-radius:10px;cursor:pointer;text-align:left;
+ transition:.2s
+}
+.navitem:hover,.navitem.active{color:#fff;background:linear-gradient(90deg,#16263d,#0e1727);box-shadow:inset 3px 0 var(--cyan)}
+.navitem .ico{width:22px;text-align:center}
+
+/* MAIN */
+main{margin-left:260px;padding-top:76px;min-height:100vh}
+.container{max-width:1450px;margin:auto;padding:28px}
+
+/* HERO */
+.hero{
+ min-height:520px;border:1px solid #1c304b;border-radius:22px;overflow:hidden;position:relative;
+ background:
+ linear-gradient(90deg,rgba(2,5,10,.98) 0%,rgba(2,5,10,.73) 45%,rgba(2,5,10,.25) 100%),
+ url("https://images.unsplash.com/photo-1534791547706-9f1f1f57f7a6?auto=format&fit=crop&w=2200&q=85") center/cover;
+ box-shadow:0 25px 80px #0008;
+}
+.hero:after{
+ content:"";position:absolute;inset:auto 0 0;height:180px;
+ background:linear-gradient(transparent,var(--bg))
+}
+.hero-content{position:relative;z-index:2;padding:75px 60px;max-width:760px}
+.kicker{
+ display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-weight:700;
+ letter-spacing:3px;font-size:12px
+}
+.dot{width:7px;height:7px;background:var(--gold);border-radius:50%;box-shadow:0 0 15px var(--gold);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{transform:scale(1.8);opacity:.5}}
+.hero h1{font-family:"Russo One";font-size:clamp(42px,7vw,88px);line-height:.95;margin:20px 0 18px}
+.hero h1 em{font-style:normal;color:var(--gold);text-shadow:0 0 35px #ffd44744}
+.hero p{font-size:18px;color:#c1ccdd;line-height:1.55;max-width:650px}
+.hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn{
+ border:1px solid #304a6c;background:#101d30;color:#fff;padding:12px 18px;border-radius:9px;
+ cursor:pointer;font-weight:700;transition:.2s
+}
+.btn.primary{background:linear-gradient(135deg,#ffd447,#ff9f1c);color:#080a0e;border:0;box-shadow:0 0 30px #ffd44725}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.stats{
+ position:absolute;bottom:22px;left:35px;right:35px;z-index:3;
+ display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+.stat{
+ background:#09111ed9;border:1px solid #253b59;backdrop-filter:blur(10px);
+ border-radius:13px;padding:16px
+}
+.stat b{display:block;color:var(--gold);font-family:"Russo One";font-size:25px}
+.stat span{color:#8d9db5;font-size:12px}
+
+/* sections */
+.section{padding:55px 0 0}
+.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}
+.section-head h2{font-family:"Russo One";font-size:30px}
+.section-head p{color:var(--muted);margin-top:6px}
+.line{height:2px;flex:1;background:linear-gradient(90deg,var(--gold),transparent);max-width:250px}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{
+ background:linear-gradient(145deg,rgba(15,25,41,.96),rgba(8,13,22,.96));
+ border:1px solid #1d304b;border-radius:15px;padding:19px;position:relative;overflow:hidden;
+ transition:.25s;min-height:150px
+}
+.card:before{
+ content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+ background:var(--cyan);filter:blur(65px);opacity:0;right:-60px;top:-60px;transition:.3s
+}
+.card:hover{transform:translateY(-6px);border-color:#3e668e;box-shadow:0 15px 45px #0008}
+.card:hover:before{opacity:.12}
+.card .emoji{font-size:27px;margin-bottom:14px}
+.card h3{font-size:19px;margin-bottom:6px}
+.card p{color:#91a0b8;line-height:1.4;font-size:14px}
+.badge{display:inline-block;margin-top:14px;padding:5px 9px;border-radius:6px;background:#14253d;color:#8edfff;font-size:10px;font-weight:700;letter-spacing:1px}
+
+/* FRUITS */
+.fruit-card{min-height:175px}
+.fruit-icon{
+ width:55px;height:55px;border-radius:15px;display:grid;place-items:center;font-size:30px;
+ background:radial-gradient(circle at 30% 25%,#fff7,transparent 25%),linear-gradient(135deg,#172c48,#0b1423);
+ border:1px solid #2d486b;box-shadow:inset 0 0 25px #0005
+}
+.rarity{font-size:10px;color:var(--gold);letter-spacing:1.5px;font-weight:700}
+
+/* table */
+.tablewrap{overflow:auto;border:1px solid #1e324e;border-radius:14px;background:#09111b}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:15px;border-bottom:1px solid #1b2b43;text-align:left}
+th{color:var(--gold);background:#0d1725;font-size:12px;letter-spacing:1px}
+td{color:#b9c5d7}
+tr:hover td{background:#0d1725}
+
+/* CODE */
+.codebox{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.code{
+ background:#09111c;border:1px solid #203550;border-radius:11px;padding:15px;
+ display:flex;justify-content:space-between;align-items:center;gap:12px
+}
+.code strong{font-family:monospace;color:#65ddff;font-size:15px}
+.code small{display:block;color:#8090a9;margin-top:4px}
+.copy{background:#172b46;border:1px solid #2a4667;color:#fff;padding:8px 11px;border-radius:7px;cursor:pointer}
+.copy:hover{background:#244568}
+
+/* detail */
+.info{
+ border:1px solid #253d5c;border-left:4px solid var(--gold);background:#0b1523;
+ border-radius:11px;padding:18px;line-height:1.6;color:#aebbd0;margin:16px 0
+}
+.info b{color:#fff}
+
+/* footer */
+footer{margin-left:260px;padding:60px 28px;color:#64748b;text-align:center;border-top:1px solid #17273e;margin-top:60px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:.65s}
+.reveal.show{opacity:1;transform:none}
+
+/* mobile */
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){
+ .menu{display:block}.top{padding:0 14px}.brand{font-size:18px}.search{display:none}
+ .sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:none}
+ main{margin-left:0}.container{padding:15px}.hero-content{padding:48px 25px}
+ .hero{min-height:600px}.stats{position:absolute;left:18px;right:18px;grid-template-columns:repeat(2,1fr)}
+ footer{margin-left:0}.grid{grid-template-columns:1fr}.codebox{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+
+<header class="top">
+<button class="menu" onclick="toggleSide()">☰</button>
+<div class="brand"><b>KING</b> <span>LEGACY</span></div>
+<div class="search"><input id="search" placeholder="🔎  Pesquisar frutas, bosses, ilhas..." oninput="filterCards()"></div>
+<div class="top-right"><button class="iconbtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⌂</button></div>
+</header>
+
+<aside class="sidebar" id="side">
+<div class="side-title">NAVEGAÇÃO</div>
+<button class="navitem active" onclick="go('home',this)"><span class="ico">🏴‍☠️</span> Início</button>
+<button class="navitem" onclick="go('fruits',this)"><span class="ico">🍎</span> Frutas</button>
+<button class="navitem" onclick="go('seas',this)"><span class="ico">🌊</span> Mares & Ilhas</button>
+<button class="navitem" onclick="go('bosses',this)"><span class="ico">👑</span> Bosses</button>
+<button class="navitem" onclick="go('races',this)"><span class="ico">🧬</span> Raças</button>
+<button class="navitem" onclick="go('haki',this)"><span class="ico">⚡</span> Haki</button>
+<button class="navitem" onclick="go('styles',this)"><span class="ico">🥋</span> Estilos</button>
+<button class="navitem" onclick="go('items',this)"><span class="ico">💎</span> Itens</button>
+<div class="side-title">COMUNIDADE</div>
+<button class="navitem" onclick="go('codes',this)"><span class="ico">🎁</span> Códigos</button>
+<button class="navitem" onclick="go('trade',this)"><span class="ico">💰</span> Trade</button>
+<button class="navitem" onclick="go('updates',this)"><span class="ico">📰</span> Updates</button>
+</aside>
+
+<main>
+<div class="container">
+
+<section id="home">
+<div class="hero reveal show">
+<div class="hero-content">
+<div class="kicker"><span class="dot"></span> WIKI NÃO OFICIAL • KING LEGACY</div>
+<h1>DOMINE O<br><em>LEGACY.</em></h1>
+<p>Seu banco de dados de King Legacy: frutas, mares, bosses, builds, Haki, códigos e tudo que você precisa para evoluir.</p>
+<div class="hero-actions">
+<button class="btn primary" onclick="go('fruits')">🍎 Explorar frutas</button>
+<button class="btn" onclick="go('seas')">🌊 Explorar os mares</button>
+</div>
+</div>
+<div class="stats">
+<div class="stat"><b>5.450</b><span>NÍVEL MÁXIMO</span></div>
+<div class="stat"><b>3</b><span>MARES</span></div>
+<div class="stat"><b>44+</b><span>FRUTAS LISTADAS</span></div>
+<div class="stat"><b>2019</b><span>LANÇAMENTO</span></div>
+</div>
+</div>
+
+<div class="section reveal">
+<div class="section-head"><div><h2>⚔️ Explore a Wiki</h2><p>Tudo organizado em categorias.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card" onclick="go('fruits')"><div class="emoji">🍎</div><h3>Frutas</h3><p>Tipos, raridades e informações das frutas.</p><span class="badge">CATÁLOGO</span></div>
+<div class="card" onclick="go('seas')"><div class="emoji">🌊</div><h3>3 Mares</h3><p>Ilhas e progressão pelo mundo.</p><span class="badge">MAPA</span></div>
+<div class="card" onclick="go('bosses')"><div class="emoji">👑</div><h3>Bosses</h3><p>Chefes e conteúdo de combate.</p><span class="badge">COMBATE</span></div>
+<div class="card" onclick="go('codes')"><div class="emoji">🎁</div><h3>Códigos</h3><p>Recompensas e códigos disponíveis.</p><span class="badge">RECOMPENSAS</span></div>
+</div>
+</div>
+</section>
+
+<section id="fruits" class="section">
+<div class="section-head"><div><h2>🍎 Frutas</h2><p>Catálogo visual de frutas conhecidas.</p></div><div class="line"></div></div>
+<div class="grid" id="fruitGrid"></div>
+</section>
+
+<section id="seas" class="section">
+<div class="section-head"><div><h2>🌊 Mares & Ilhas</h2><p>Viaje por toda a progressão do mundo.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">🏝️</div><h3>First Sea</h3><p>Onde a aventura começa. Explore ilhas iniciais, faça quests, consiga frutas e evolua seus stats.</p><span class="badge">INÍCIO</span></div>
+<div class="card"><div class="emoji">🌸</div><h3>Second Sea</h3><p>Região intermediária com novas ilhas, inimigos, sistemas e desafios.</p><span class="badge">INTERMEDIÁRIO</span></div>
+<div class="card"><div class="emoji">🌌</div><h3>Third Sea</h3><p>Conteúdo avançado para jogadores de nível elevado e atividades de endgame.</p><span class="badge">ENDGAME</span></div>
+</div>
+<div class="info"><b>Progressão:</b> avance por missões e níveis para liberar novos mares e conteúdos.</div>
+</section>
+
+<section id="bosses" class="section">
+<div class="section-head"><div><h2>👑 Bosses</h2><p>Prepare sua build antes de entrar na arena.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">⚡</div><h3>Enel</h3><p>Boss ligado à região de Skypiea e aos conteúdos do First Sea.</p><span class="badge">FIRST SEA</span></div>
+<div class="card"><div class="emoji">🌊</div><h3>Sea King</h3><p>Grande inimigo marítimo encontrado durante a exploração.</p><span class="badge">MAR</span></div>
+<div class="card"><div class="emoji">🐉</div><h3>Dragon</h3><p>Chefes e conteúdos especiais podem exigir builds específicas.</p><span class="badge">DESAFIO</span></div>
+<div class="card"><div class="emoji">💀</div><h3>Raid Bosses</h3><p>Combates de maior dificuldade e recompensas especiais.</p><span class="badge">ENDGAME</span></div>
+</div>
+</section>
+
+<section id="races" class="section">
+<div class="section-head"><div><h2>🧬 Raças</h2><p>Escolha e desenvolva sua identidade de combate.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">👤</div><h3>Human</h3><p>Raça humana e uma das opções básicas do sistema.</p></div>
+<div class="card"><div class="emoji">🦈</div><h3>Fish</h3><p>Raça associada ao ambiente marítimo e suas vantagens.</p></div>
+<div class="card"><div class="emoji">🐇</div><h3>Mink</h3><p>Raça com identidade própria e foco em mobilidade.</p></div>
+<div class="card"><div class="emoji">☁️</div><h3>Skypian</h3><p>Raça relacionada às regiões celestiais do mundo.</p></div>
+</div>
+</section>
+
+<section id="haki" class="section">
+<div class="section-head"><div><h2>⚡ Haki</h2><p>Sistemas de habilidades especiais.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">🛡️</div><h3>Armament</h3><p>Fortaleça seu combate e aumente sua capacidade ofensiva e defensiva.</p></div>
+<div class="card"><div class="emoji">👁️</div><h3>Observation</h3><p>Habilidade focada em percepção durante os combates.</p></div>
+<div class="card"><div class="emoji">👑</div><h3>Conqueror</h3><p>Uma habilidade extremamente rara dentro do jogo.</p></div>
+</div>
+</section>
+
+<section id="styles" class="section">
+<div class="section-head"><div><h2>🥋 Estilos de luta</h2><p>Monte seu moveset ideal.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">👊</div><h3>Combat</h3><p>Estilo básico para começar a progressão.</p></div>
+<div class="card"><div class="emoji">🦵</div><h3>Black Leg</h3><p>Combate baseado em técnicas com as pernas.</p></div>
+<div class="card"><div class="emoji">🐉</div><h3>Dragon Claw</h3><p>Estilo avançado com forte identidade de combate.</p></div>
+<div class="card"><div class="emoji">⚡</div><h3>Electro</h3><p>Estilo baseado em ataques elétricos.</p></div>
+<div class="card"><div class="emoji">🔥</div><h3>God Human</h3><p>Estilo avançado para jogadores de progressão elevada.</p></div>
+</div>
+</section>
+
+<section id="items" class="section">
+<div class="section-head"><div><h2>💎 Itens</h2><p>Acessórios e equipamentos para sua build.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">🗡️</div><h3>Espadas</h3><p>Armas para diferentes estilos de combate.</p></div>
+<div class="card"><div class="emoji">👒</div><h3>Acessórios</h3><p>Itens que podem complementar atributos e builds.</p></div>
+<div class="card"><div class="emoji">💍</div><h3>Itens raros</h3><p>Itens de obtenção mais difícil e procura elevada.</p></div>
+<div class="card"><div class="emoji">⚙️</div><h3>Builds</h3><p>Combine frutas, armas, estilo, raça e acessórios.</p></div>
+</div>
+</section>
+
+<section id="codes" class="section">
+<div class="section-head"><div><h2>🎁 Códigos</h2><p>Copie com um clique.</p></div><div class="line"></div></div>
+<div class="info"><b>⚠️ Atenção:</b> códigos podem expirar ou mudar. A lista abaixo é uma área editável da wiki.</div>
+<div class="codebox" id="codesGrid"></div>
+</section>
+
+<section id="trade" class="section">
+<div class="section-head"><div><h2>💰 Trade</h2><p>Negocie com inteligência.</p></div><div class="line"></div></div>
+<div class="grid">
+<div class="card"><div class="emoji">🍎</div><h3>Frutas</h3><p>Compare raridade e procura antes de aceitar uma troca.</p></div>
+<div class="card"><div class="emoji">⚖️</div><h3>Valor</h3><p>Valores de mercado podem variar com atualizações e demanda.</p></div>
+<div class="card"><div class="emoji">🚨</div><h3>Segurança</h3><p>Nunca entregue itens fora do sistema oficial de troca.</p></div>
+</div>
+</section>
+
+<section id="updates" class="section">
+<div class="section-head"><div><h2>📰 Updates</h2><p>Área de histórico da wiki.</p></div><div class="line"></div></div>
+<div class="tablewrap"><table><thead><tr><th>UPDATE</th><th>STATUS</th><th>NOTAS</th></tr></thead>
+<tbody><tr><td>Update 11 Part 1</td><td>ATUAL</td><td>Conteúdo recente da versão.</td></tr>
+<tr><td>Update 10</td><td>HISTÓRICO</td><td>Novos conteúdos e progressão.</td></tr>
+<tr><td>Update 9</td><td>HISTÓRICO</td><td>Alterações e novos sistemas.</td></tr></tbody></table></div>
+</section>
+
+</div>
+</main>
+
+<footer>⚓ KING LEGACY ULTIMATE WIKI • Projeto de fã • Interface responsiva</footer>
+
+<script>
+const fruits=[
+["Dragon","🐉","Zoan","Lendária"],["Dough","🍩","Especial","Mítica"],["Phoenix","🔥","Zoan","Lendária"],
+["Leopard","🐆","Zoan","Lendária"],["Buddha","🪷","Zoan","Lendária"],["Dark","🌑","Logia","Rara"],
+["Light","✨","Logia","Rara"],["Magma","🌋","Logia","Rara"],["Rumble","⚡","Logia","Lendária"],
+["Ice","❄️","Logia","Comum"],["Flame","🔥","Logia","Comum"],["Sand","🏜️","Logia","Comum"],
+["Quake","💥","Paramecia","Lendária"],["Gravity","🪐","Paramecia","Lendária"],["Venom","☠️","Paramecia","Lendária"],
+["Shadow","🌘","Paramecia","Lendária"],["String","🕸️","Paramecia","Rara"],["Magnet","🧲","Paramecia","Rara"],
+["Rubber","🟡","Paramecia","Rara"],["Barrier","🛡️","Paramecia","Comum"],["Bomb","💣","Paramecia","Comum"],
+["Smoke","💨","Logia","Comum"],["Snow","❄️","Logia","Rara"],["Spike","📌","Paramecia","Comum"],
+["Spin","🌀","Paramecia","Comum"],["Wolf","🐺","Zoan","Rara"],["Mammoth","🦣","Zoan","Lendária"],
+["Spino","🦖","Zoan","Rara"],["Giraffe","🦒","Zoan","Comum"],["Paw","🐾","Paramecia","Rara"]
+];
+
+document.getElementById("fruitGrid").innerHTML=fruits.map(f=>`
+<div class="card fruit-card searchable reveal">
+<div class="fruit-icon">${f[1]}</div>
+<div style="margin-top:12px"><h3>${f[0]}</h3><span class="rarity">${f[3].toUpperCase()}</span></div>
+<p style="margin-top:7px">Tipo: ${f[2]}</p>
+<span class="badge">VER DETALHES</span>
+</div>`).join("");
+
+const codes=[
+["4BVISITS","Gems"],["UPDATE11PART1","Reset de Stats"],["MOBILEFIXED","Chronicles Lore"],
+["2MFAV","Reset de Stats"],["FREESTATSRESET","Reset de Stats"],["WELCOMETOKINGLEGACY","EXP 2x"]
+];
+document.getElementById("codesGrid").innerHTML=codes.map(c=>`
+<div class="code"><div><strong>${c[0]}</strong><small>${c[1]}</small></div>
+<button class="copy" onclick="copyCode('${c[0]}')">COPIAR</button></div>`).join("");
+
+function copyCode(x){
+ navigator.clipboard?.writeText(x);
+ const old=event.target.textContent;event.target.textContent="COPIADO!";
+ setTimeout(()=>event.target.textContent=old,1100);
+}
+function toggleSide(){document.getElementById("side").classList.toggle("open")}
+function go(id,btn){
+ document.querySelectorAll("main section").forEach(s=>s.style.display="none");
+ document.getElementById(id).style.display="block";
+ document.querySelectorAll(".navitem").forEach(x=>x.classList.remove("active"));
+ if(btn)btn.classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+ if(innerWidth<800)document.getElementById("side").classList.remove("open");
+}
+function filterCards(){
+ const q=document.getElementById("search").value.toLowerCase();
+ document.querySelectorAll(".searchable").forEach(c=>c.style.display=c.innerText.toLowerCase().includes(q)?"":"none");
+}
+const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.08});
+document.querySelectorAll(".reveal").forEach(e=>observer.observe(e));
+</script>
+</body>
+</html>
